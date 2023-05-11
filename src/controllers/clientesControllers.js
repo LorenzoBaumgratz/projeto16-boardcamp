@@ -32,7 +32,7 @@ export async function putClienteById(req,res){
         if(existeCpf.rows.length>1) return res.sendStatus(409)
 
         const clientePut=await db.query(`update customers set name=$1,phone=$2,cpf=$3,birthday=$4 where id=$5;`,[name,phone,cpf,birthday,id])
-
+        res.sendStatus(200)
     }catch(err){
         res.status(500).send(err.message)
     }
