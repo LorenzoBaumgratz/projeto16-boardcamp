@@ -52,9 +52,31 @@ export async function postAlugueis(req, res) {
 }
 
 export async function postAluguelById(req, res) {
+    const { id } = req.params
     try {
+        const alugueis = await db.query(`select * from rentals where id=$1;`, [id])
+        if (alugueis.rows.length === 0) return res.sendStatus(404)
 
+        if (alugueis.rows[0].returnDate != null) return res.sendStatus(400)
+
+        const game = await db.query(`select * from games where id=$1;`, [alugueis.rows[0].gameId])
+        const now = dayjs().format('YYYY-MM-DD')
+
+        const atraso = dayjs(alugueis.rows[0].rentDate).add(alugueis.rows[0].daysRented, "day")
+        console.log(atraso)
+        let delayFee
+        if (dayjs(atraso).diff(now, 'day') < 0) {
+            delayFee = dayjs(atraso).diff(now, 'day') * -game.rows[0].pricePerDay
+        }else{
+            delayFee=0
+        }
+        console.log("delayFee",delayFee)
+
+        console.log(await db.query(`update rentals set "returnDate"=$1, "delayFee"=$2 where id=$3;`[now, delayFee,id]))
+
+        const newRent = await db.query(`update rentals set "returnDate"=$1, "delayFee"=$2 where id=$3;`[now, delayFee,id])
         res.sendStatus(200)
+
     } catch (err) {
         res.status(500).send(err.message)
     }

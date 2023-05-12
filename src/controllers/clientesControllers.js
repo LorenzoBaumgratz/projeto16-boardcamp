@@ -23,7 +23,6 @@ export async function getClienteById(req,res){
 
 export async function putClienteById(req,res){
     const {id}=req.params
-    const {name,phone,cpf,birthday}=req.body
     try{
         const cliente=await db.query(`select * from customers where id=$1;`,[id])
         if(!cliente) return res.sendStatus(404)
