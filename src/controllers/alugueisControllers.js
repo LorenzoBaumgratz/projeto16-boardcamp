@@ -9,18 +9,18 @@ export async function getAlugueis(req, res) {
         const finalRes = result.rows.map(i => ({
             ...i,
             customer: {
-            id: i.customerId,
-            name: i.clientName
-        },
+                id: i.customerId,
+                name: i.clientName
+            },
             game: {
-            id: i.gameId,
-            name: i.gameName
-        }
+                id: i.gameId,
+                name: i.gameName
+            }
         }))
-    return res.status(200).send(finalRes)
-}catch (err) {
-    res.status(500).send(err.message)
-}
+        return res.status(200).send(finalRes)
+    } catch (err) {
+        res.status(500).send(err.message)
+    }
 }
 
 export async function postAlugueis(req, res) {
@@ -46,6 +46,15 @@ export async function postAlugueis(req, res) {
         values($1,$2,$3,$4,$5,$6,$7);`, [customerId, gameId, dayjs().format('YYYY-MM-DD'), daysRented, null, originalPrice, null])
 
         res.sendStatus(201)
+    } catch (err) {
+        res.status(500).send(err.message)
+    }
+}
+
+export async function postAluguelById(req, res) {
+    try {
+
+        res.sendStatus(200)
     } catch (err) {
         res.status(500).send(err.message)
     }
