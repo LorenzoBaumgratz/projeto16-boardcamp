@@ -72,9 +72,9 @@ export async function postAluguelById(req, res) {
         }
         console.log("delayFee",delayFee)
 
-        console.log(await db.query(`update rentals set "returnDate"=$1, "delayFee"=$2 where id=$3;`[now, delayFee,id]))
+        console.log(await db.query(`update rentals set "returnDate"=$1, "delayFee"=$2 where id=$3;`,[now, delayFee,id]))
 
-        const newRent = await db.query(`update rentals set "returnDate"=$1, "delayFee"=$2 where id=$3;`[now, delayFee,id])
+        const newRent = await db.query(`update rentals set "returnDate"=$1, "delayFee"=$2 where id=$3;`,[now, delayFee,id])
         res.sendStatus(200)
 
     } catch (err) {
