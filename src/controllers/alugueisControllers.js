@@ -70,7 +70,6 @@ export async function postAluguelById(req, res) {
         }else{
             delayFee=0
         }
-        console.log("delayFee",delayFee)
 
         console.log(await db.query(`update rentals set "returnDate"=$1, "delayFee"=$2 where id=$3;`,[now, delayFee,id]))
 
@@ -85,7 +84,13 @@ export async function postAluguelById(req, res) {
 export async function deleteAluguelById(req, res) {
     const { id } = req.params
     try {
-        
+        const alugueis = await db.query(`select * from rentals where id=$1;`, [id])
+        if (alugueis.rows.length === 0) return res.sendStatus(404)
+
+        if(alugueis.rows[0].returnDate===null) return res.sendStatus(400)
+
+        await db.query("delete from rentals where id=$1;",[id])
+        res.sendStatus(200)
     } catch (err) {
         res.status(500).send(err.message)
     }
