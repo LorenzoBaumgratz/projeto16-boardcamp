@@ -34,8 +34,7 @@ export async function putClienteById(req,res){
     try{
         const cliente=await db.query(`select * from customers where id=$1;`,[id])
         if(!cliente) return res.sendStatus(404)
-
-        const existeCpf=await db.query(`select * from customers where id=$1 and cpf=$1;`,[cpf])
+        const existeCpf=await db.query(`select * from customers where id=$1 and cpf=$2;`,[id,cpf])
         if(existeCpf.rows.length===0) return res.sendStatus(409)
 
         const clientePut=await db.query(`update customers set name=$1,phone=$2,cpf=$3,birthday=$4 where id=$5;`,[name,phone,cpf,birthday.split("T"),id])
